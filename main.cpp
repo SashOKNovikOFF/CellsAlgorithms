@@ -1,50 +1,48 @@
-#include <SFML/Graphics.hpp>
-#include "Model.hpp"
+// Стандартные библиотеки
 #include <iostream>
 
-bool DEBUG = false;                           // Переменная-флаг для вывода отладочной информации
-void input_data();                            // Ввод исходных данных
-void debugOutput(float** grid, int numCells); // Вывод данных по сетке в консоль
+// Пользовательские библиотеки
+#include <SFML/Graphics.hpp>
+#include "Model.hpp"
+
+bool DEBUG = false;                                                // Переменная-флаг для вывода отладочной информации
+void input_data();                                                 // Ввод исходных данных
+void debugOutput(const vector<vector<float>>& grid, int numCells); // Вывод данных по сетке в консоль
 
 // Данные по модели
-int numCells_; // Количество клеток
-float diffusion_; // Коэффициент диффузии [м^2 / с]
-float courant_; // Коэффициент Куранта []
-float length_; // Размер квадратной области [м]
-float end_time_; // Конечное время [с]
+int numCells_    = 128;   // Количество клеток
+float diffusion_ = 10.0f; // Коэффициент диффузии [м^2 / с]
+float courant_   = 0.25f; // Коэффициент Куранта []
+float length_    = 10.0f; // Размер квадратной области [м]
+float end_time_  = 2.0f;  // Конечное время [с]
 
 // Начальная концентрация
-float c_0;
+float c_0 = 0.3f;
 
 // Коэффициенты для верхнего и нижнего граничных условий
-float alpha_1;
-float alpha_2;
-float beta_1;
-float beta_2;
-float mu_1;
-float mu_2;
+float alpha_1 = 0.0f;
+float alpha_2 = 0.0f;
+float beta_1  = 1.0f;
+float beta_2  = 1.0f;
+float mu_1    = 0.4f;
+float mu_2    = 0.6f;
 
 // Концентрации на левой и правой границе сетки
-float c_1;
-float c_2;
+float c_1 = 0.3f;
+float c_2 = 0.3f;
 
 int main()
 {
 //    input_data();
-//    Model model(numCells_, diffusion_, courant_, length_, end_time_);
-//    model.setInnerCoeffs(c_0);
-//    model.setUpDownCoeffs(alpha_1, alpha_2, beta_1, beta_2, mu_1, mu_2);
-//    model.setLeftRightCoeffs(c_1, c_2);
-
-    Model model(256, 10.0f, 0.25f, 10.0f, 2.0f); // Модель
-    model.setInnerCoeffs(0.3f); // Задание начальной концентрации
-    model.setUpDownCoeffs(0.0f, 0.0f, 1.0f, 1.0f, 0.4f, 0.6f); // Задание верхней и нижней границ
-    model.setLeftRightCoeffs(0.3f, 0.3f); // Задание левой и правой границ
+    Model model(numCells_, diffusion_, courant_, length_, end_time_);    // Модель
+    model.setInnerCoeffs(c_0);                                           // Задание начальной концентрации
+    model.setUpDownCoeffs(alpha_1, alpha_2, beta_1, beta_2, mu_1, mu_2); // Задание верхней и нижней границ
+    model.setLeftRightCoeffs(c_1, c_2);                                  // Задание левой и правой границ
 
     model.userInit(); // Инициализация модели
 
-    float** grid = model.getGrid(); // Связь сетки модели с "вьювером"
-    int numCells = model.getNumCells(); // Связь размера сетки модели с "вьювером"
+    vector<vector<float>> grid = model.getGrid(); // Связь сетки модели с "вьювером"
+    int numCells = model.getNumCells();           // Связь размера сетки модели с "вьювером"
 
     const int winSize = 800;    // Размер квадратного окна
     const float offset = 16.0f; // Отступ сетки в окне
@@ -85,7 +83,6 @@ int main()
 
         window.display(); // Выводим сетку на экран
         if (DEBUG) sf::sleep(sf::seconds(0.5f)); // Задерживаем изображение
-        system("cls"); // Очищаем экран консоли
 
         int workFlag = model.calcEngine(); // Сменяем "поколение"
 
@@ -138,7 +135,7 @@ void input_data()
     std::cin >> c_1 >> c_2;
 }
 
-void debugOutput(float** grid, int numCells)
+void debugOutput(const vector<vector<float>>& grid, int numCells)
 {
     std::cout << "------" << std::endl;
 
