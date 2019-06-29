@@ -9,6 +9,8 @@ bool DEBUG = false;                                                // Перем
 void input_data();                                                 // Ввод исходных данных
 void debugOutput(const vector<vector<float>>& grid, int numCells); // Вывод данных по сетке в консоль
 
+void view_model(Model &model, vector<vector<float>> &grid, int numCells);
+
 // Данные по модели
 int numCells_    = 128;   // Количество клеток
 float diffusion_ = 10.0f; // Коэффициент диффузии [м^2 / с]
@@ -31,6 +33,11 @@ float mu_2    = 0.6f;
 float c_1 = 0.3f;
 float c_2 = 0.3f;
 
+// Данные по отображению на экране
+const int winSize = 800;    // Размер квадратного окна
+const float offset = 16.0f; // Отступ сетки в окне
+const float recSize = 5.0f; // Размер ячеек
+
 int main()
 {
 //    input_data();
@@ -43,11 +50,13 @@ int main()
 
     vector<vector<float>> grid = model.getGrid(); // Связь сетки модели с "вьювером"
     int numCells = model.getNumCells();           // Связь размера сетки модели с "вьювером"
+    view_model(model, grid, numCells);            // Вывод модели на экран
 
-    const int winSize = 800;    // Размер квадратного окна
-    const float offset = 16.0f; // Отступ сетки в окне
-    const float recSize = 3.0f; // Размер ячеек
+    return 0;
+}
 
+void view_model(Model &model, vector<vector<float>>& grid, int numCells)
+{
     // Инициализация окна
     sf::RenderWindow window(sf::VideoMode(winSize, winSize), L"Клеточный автомат \"2D-диффузия\"");
 
@@ -75,7 +84,7 @@ int main()
                 if (grid[x][y] != 0.0f)
                 {
                     sf::RectangleShape rec(sf::Vector2f(recSize, recSize));
-                    rec.setFillColor(sf::Color(0, 255, 0, (sf::Uint8)(grid[x][y] * 255)));
+                    rec.setFillColor(sf::Color(0, 255, 0, (sf::Uint8) (grid[x][y] * 255)));
                     rec.setOrigin(sf::Vector2f(-offset, -offset));
                     rec.setPosition(sf::Vector2f((x - 1) * recSize, (y - 1) * recSize));
                     window.draw(rec);
@@ -103,8 +112,6 @@ int main()
             break;
         }
     }
-
-    return 0;
 }
 
 void input_data()
