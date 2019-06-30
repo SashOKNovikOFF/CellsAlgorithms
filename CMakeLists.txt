@@ -34,7 +34,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/output)
 # Собрать приложение
 set(APP_SOURCE
         main.cpp
-        Model.cpp)
+        Model.cpp Road1D.cpp Road1D.hpp)
 
 set(APP_NAME SFML_Project)
 add_executable(${APP_NAME} ${APP_SOURCE})
