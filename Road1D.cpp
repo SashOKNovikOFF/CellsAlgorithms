@@ -4,7 +4,6 @@
 
 // Стандартные библиотеки
 #include <iostream>
-#include <random>
 
 using std::cout;
 using std::endl;
@@ -17,17 +16,17 @@ Road1D::Road1D(int road_length_, int vel_max_, int cars_num_, int dist_) :
     vel_max(vel_max_),
     cars_num(cars_num_),
     dist(dist_),
+    cur_time(1),
+    new_cars_time(-1),
+    prob(-1.0),
     cells(road_length_),
     new_cells(road_length_),
-    cur_time(1),
-    new_cars_time(-1)
+    gen(rd()),
+    coord_dist(0, road_length),
+    vel_dist(1, vel_max),
+    prob_dist(0.0, 1.0)
 {
     // Задать начальные данные по машинам
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> coord_dist(0, road_length);
-    std::uniform_int_distribution<> vel_dist(1, vel_max);
-
     for (int car_ind = 0; car_ind < cars_num; ++car_ind)
     {
         const int coord = coord_dist(gen);
@@ -76,6 +75,8 @@ void Road1D::make_next_step()
                 next_velocity = std::min(next_velocity, beetween_dist - dist);
 
             // 3. Случайные возмущения
+            if (prob > 0.0 && prob_dist(gen) > prob)
+                next_velocity = std::max(next_velocity - 1, 0);
 
             // 4. Движение
             int next_coord = coord + next_velocity;
@@ -120,4 +121,9 @@ int Road1D::get_cur_time()
 void Road1D::set_new_cars_time(int new_cars_time_)
 {
     new_cars_time = new_cars_time_;
+}
+
+void Road1D::set_prob(float prob_)
+{
+    prob = prob_;
 }

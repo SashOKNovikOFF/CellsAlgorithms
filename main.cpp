@@ -23,9 +23,11 @@ int main()
     const int dist = 1;
     const int end_time = 50;
     const int new_cars_time = 5;
+    const double prob = 0.3f;
 
     Road1D model(road_length, vel_max, cars_num, dist);
     model.set_new_cars_time(new_cars_time);
+    model.set_prob(prob);
 
     int numCells = road_length;            // Связь размера сетки модели с "вьювером"
     view_model(model, numCells, end_time); // Вывод модели на экран
