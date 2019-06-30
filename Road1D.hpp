@@ -40,13 +40,18 @@ public:
     /// Выдать текущее время модели
     int get_cur_time();
 
-private:
-    int road_length;
-    int vel_max;
-    int cars_num;
-    int dist;
-    int cur_time;
+    /// Задать период времени, через который появляются новые машины
+    /// @param new_cars_time_ - период времени, через который появляются новые машины
+    void set_new_cars_time(int new_cars_time_);
 
-    vector<cell> cells;
-    vector<cell> new_cells;
+private:
+    int road_length;   // Длина дороги
+    int vel_max;       // Максимальная скорость машины
+    int cars_num;      // Количество машин на дороге в начальный момент времени
+    int dist;          // Безопасное расстояние между машинами
+    int cur_time;      // Текущее время модели
+    int new_cars_time; // Период времени, через который появляются новые машины
+
+    vector<cell> cells;     // Ячейки на предыдущем шаге по времени
+    vector<cell> new_cells; // Ячейки на следующем шаге по времени
 };

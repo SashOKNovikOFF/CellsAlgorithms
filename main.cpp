@@ -13,6 +13,7 @@ const int win_length = 1200; // Размер квадратного окна
 const int win_height = 300;  // Размер квадратного окна
 const float offset = 16.0f;  // Отступ сетки в окне
 const float recSize = 20.0f; // Размер ячеек
+const float sleep_t = 0.5;   // Время задержки картинки
 
 int main()
 {
@@ -21,8 +22,10 @@ int main()
     const int cars_num = 15;
     const int dist = 1;
     const int end_time = 50;
+    const int new_cars_time = 5;
 
     Road1D model(road_length, vel_max, cars_num, dist);
+    model.set_new_cars_time(new_cars_time);
 
     int numCells = road_length;            // Связь размера сетки модели с "вьювером"
     view_model(model, numCells, end_time); // Вывод модели на экран
@@ -74,7 +77,7 @@ void view_model(Road1D &model, int numCells, int end_time)
         }
 
         window.display(); // Выводим сетку на экран
-        sf::sleep(sf::seconds(0.1));
+        sf::sleep(sf::seconds(sleep_t));
 
         model.make_next_step(); // Сменяем "поколение"
         grid = model.get_next_result();

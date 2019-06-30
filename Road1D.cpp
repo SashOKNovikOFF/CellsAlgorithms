@@ -19,7 +19,8 @@ Road1D::Road1D(int road_length_, int vel_max_, int cars_num_, int dist_) :
     dist(dist_),
     cells(road_length_),
     new_cells(road_length_),
-    cur_time(1)
+    cur_time(1),
+    new_cars_time(-1)
 {
     // Задать начальные данные по машинам
     std::random_device rd;
@@ -40,7 +41,12 @@ void Road1D::make_next_step()
     if (cur_time != 1)
         cells = new_cells;
 
-    // Задать вектор ячеек на следующем шаге по времени
+    if ((new_cars_time != -1) && !cells[0].is_car && ((cur_time % new_cars_time) == 0))
+    {
+        cells[0].is_car = true;
+        cells[0].velocity = 1;
+    }
+
     for (auto& elem : new_cells)
     {
         elem.is_car = false;
@@ -109,4 +115,9 @@ void Road1D::output_data()
 int Road1D::get_cur_time()
 {
     return cur_time;
+}
+
+void Road1D::set_new_cars_time(int new_cars_time_)
+{
+    new_cars_time = new_cars_time_;
 }
